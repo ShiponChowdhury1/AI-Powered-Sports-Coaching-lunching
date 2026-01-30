@@ -1,15 +1,51 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function EmailSubscriptionForm() {
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [subscribed, setSubscribed] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Subscribed:", email);
-    // Add your subscription logic here
-    setEmail("");
+    setLoading(true);
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subscribers/subscribe/`, {
+        method: "POST",
+        headers: {
+          "accept": "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        toast.success("Successfully subscribed! Check your email.", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+        setEmail("");
+        setSubscribed(true);
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.message || "Subscription failed. Please try again.", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }
+    } catch (err) {
+      toast.error("Network error. Please check your connection.", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -33,16 +69,23 @@ export default function EmailSubscriptionForm() {
 
         <button
           type="submit"
-          className="h-14 sm:h-17 md:h-19.5 w-full whitespace-nowrap rounded-[10px] bg-[#00786F] px-6 sm:px-7 md:px-8 text-base sm:text-lg font-bold text-white shadow-xl shadow-[#00786F]/20 transition-all duration-300 hover:bg-[#009688] hover:shadow-2xl hover:shadow-[#00786F]/40 hover:-translate-y-0.5 sm:w-[175px]"
+          disabled={loading}
+          className="h-14 sm:h-17 md:h-19.5 w-full whitespace-nowrap rounded-[10px] bg-[#00786F] px-6 sm:px-7 md:px-8 text-base sm:text-lg font-bold text-white shadow-xl shadow-[#00786F]/20 transition-all duration-300 hover:bg-[#009688] hover:shadow-2xl hover:shadow-[#00786F]/40 hover:-translate-y-0.5 sm:w-[175px] disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Subscribe
+          {loading ? "Subscribing..." : "Subscribe"}
         </button>
       </form>
 
-      {/* Spam Notice */}
-      <p className="mt-4 sm:mt-5 md:mt-6 text-center text-xs sm:text-sm font-medium text-white/60">
-        No spam. Only launch updates.
-      </p>
+      {/* Spam Notice / Success Message */}
+      {subscribed ? (
+        <p className="mt-4 sm:mt-5 md:mt-6 text-center text-xs sm:text-sm font-medium text-[#00786F] animate-pulse">
+          ✓ Successfully subscribed! Check your inbox.
+        </p>
+      ) : (
+        <p className="mt-4 sm:mt-5 md:mt-6 text-center text-xs sm:text-sm font-medium text-white/60">
+          No spam. Only launch updates.
+        </p>
+      )}
     </div>
   );
 }
