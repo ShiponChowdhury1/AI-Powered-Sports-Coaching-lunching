@@ -1,9 +1,9 @@
 export default function Footer() {
   return (
     <footer className="text-center">
-      <p className="text-sm text-white/50 p-8">
-        © 2026 Sports Coach. All rights reserved.
-      </p>
+      <span className="text-sm text-white/50">
+  © {new Date().getFullYear()} Sports Coach. All rights reserved.
+</span>
     </footer>
   );
 }
