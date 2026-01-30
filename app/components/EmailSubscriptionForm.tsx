@@ -33,7 +33,12 @@ export default function EmailSubscriptionForm() {
         setSubscribed(true);
       } else {
         const errorData = await response.json();
-        toast.error(errorData.message || "Subscription failed. Please try again.", {
+        // Check if email already exists
+        const errorMessage = errorData.email 
+          ? "This email is already subscribed!" 
+          : errorData.message || "Subscription failed. Please try again.";
+        
+        toast.error(errorMessage, {
           position: "top-right",
           autoClose: 3000,
         });
