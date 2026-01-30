@@ -16,12 +16,12 @@ export default function HeroSection() {
       </h1>
 
       {/* Subheading */}
-      <h2 className="mb-4 sm:mb-5 md:mb-6 text-center text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold tracking-wide text-white">
+      <h2 className="mb-4 sm:mb-5 md:mb-6 text-center text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold tracking-wide text-[#D1D5DC]">
         Upload. Get AI Feedback. Train Smarter.
       </h2>
 
       {/* Description */}
-      <p className="mb-8 sm:mb-10 md:mb-12 max-w-2xl text-center text-sm sm:text-base md:text-lg leading-relaxed text-white/80">
+      <p className="mb-8 sm:mb-10 md:mb-12 max-w-2xl text-center text-sm sm:text-base md:text-lg leading-relaxed text-[#99A1AF]">
         Upload a short video clip and get instant AI-powered feedback along with
         a personalized training plan.
       </p>
